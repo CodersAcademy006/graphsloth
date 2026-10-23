@@ -269,6 +269,14 @@ def gemma_verdict(name: str, size_str: str, git: dict | None, graph: dict | None
     return {"verdict": verdict, "reason": reason, "needs_live_check": needs_live_check}
 
 
+def failed_verdicts(results: list[dict]) -> list[str]:
+    """Names of folders whose "reason" is a raw Gemma-call error, not a real
+    read of the facts. These need a rerun, never a silent publish: a report
+    with text like "[Gemma call failed after 3 attempts: timed out]" in it is
+    not a verdict, it's an exception that leaked into the output."""
+    return [r["name"] for r in results if "failed" in r.get("reason", "").lower()]
+
+
 def audit(root: Path) -> list[dict]:
     results = []
     folders = sorted(
@@ -406,6 +414,12 @@ def main():
     write_report(results, Path(args.out))
     print(f"\nReport: {args.out}")
     print(f"Results: {args.json_out}")
+
+    failures = failed_verdicts(results)
+    if failures:
+        print(f"\n!! {len(failures)} folder(s) have a raw Gemma error as their verdict, not a real "
+              f"read: {', '.join(failures)}. Rerun these before trusting or publishing this report.",
+              file=sys.stderr)
 
     if args.apply:
         archive_dir = root / "_Archive"
