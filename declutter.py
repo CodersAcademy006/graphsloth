@@ -153,9 +153,20 @@ def gemma_verdict(name: str, size_str: str, git: dict | None, graph: dict | None
         f"Folder: {name}\n{facts_block}\n"
     )
     body = json.dumps({"model": MODEL, "prompt": prompt, "stream": False}).encode()
-    req = urllib.request.Request(OLLAMA_URL, data=body, headers={"Content-Type": "application/json"})
-    with urllib.request.urlopen(req, timeout=180) as resp:
-        text = json.loads(resp.read()).get("response", "")
+    text = ""
+    last_err = None
+    for attempt in range(3):
+        try:
+            req = urllib.request.Request(OLLAMA_URL, data=body, headers={"Content-Type": "application/json"})
+            with urllib.request.urlopen(req, timeout=300) as resp:
+                text = json.loads(resp.read()).get("response", "")
+            break
+        except Exception as e:  # noqa: BLE001 - genuinely want to retry any transient failure here
+            last_err = e
+            print(f"    (ollama call failed, attempt {attempt + 1}/3: {e})", file=sys.stderr)
+    else:
+        return {"verdict": "DORMANT", "reason": f"[Gemma call failed after 3 attempts: {last_err}]",
+                "needs_live_check": bool(deploy)}
     verdict = "DORMANT"
     reason = text.strip()
     m = re.search(r"VERDICT:\s*(ACTIVE|DORMANT|ARCHIVE-CANDIDATE)", text, re.I)
@@ -177,38 +188,49 @@ def gemma_verdict(name: str, size_str: str, git: dict | None, graph: dict | None
 
 def audit(root: Path) -> list[dict]:
     results = []
-    folders = sorted(p for p in root.iterdir() if p.is_dir() and p.name not in SKIP_NAMES)
+    folders = sorted(
+        p for p in root.iterdir()
+        if p.is_dir() and p.name not in SKIP_NAMES and not p.name.startswith(".")
+    )
     for i, path in enumerate(folders, 1):
         print(f"[{i}/{len(folders)}] {path.name} ...", file=sys.stderr)
-        kb = dir_size_kb(path)
-        size_str = human_size(kb)
-        git = git_facts(path)
-        graph = graphify_facts(path) if git else None
-        deploy = deploy_signals(path)
-        verdict = gemma_verdict(path.name, size_str, git, graph, deploy)
-        results.append({
-            "name": path.name,
-            "path": str(path),
-            "size_str": size_str,
-            "size_kb": kb,
-            "git": git,
-            "graph": graph,
-            "deploy_signals": deploy,
-            **verdict,
-        })
-        print(f"    -> {verdict['verdict']}: {verdict['reason']}", file=sys.stderr)
+        try:
+            kb = dir_size_kb(path)
+            size_str = human_size(kb)
+            git = git_facts(path)
+            graph = graphify_facts(path) if git else None
+            deploy = deploy_signals(path)
+            verdict = gemma_verdict(path.name, size_str, git, graph, deploy)
+            results.append({
+                "name": path.name,
+                "path": str(path),
+                "size_str": size_str,
+                "size_kb": kb,
+                "git": git,
+                "graph": graph,
+                "deploy_signals": deploy,
+                **verdict,
+            })
+            print(f"    -> {verdict['verdict']}: {verdict['reason']}", file=sys.stderr)
+        except Exception as e:  # noqa: BLE001 - one bad folder must never kill the whole audit
+            print(f"    !! skipped {path.name}: {e}", file=sys.stderr)
+            results.append({
+                "name": path.name, "path": str(path), "size_str": "?", "size_kb": 0,
+                "git": None, "graph": None, "deploy_signals": [],
+                "verdict": "ERROR", "reason": f"audit failed: {e}", "needs_live_check": False,
+            })
     return results
 
 
 def write_report(results: list[dict], out_path: Path) -> None:
-    order = {"ARCHIVE-CANDIDATE": 0, "DORMANT": 1, "ACTIVE": 2}
+    order = {"ARCHIVE-CANDIDATE": 0, "DORMANT": 1, "ACTIVE": 2, "ERROR": 3}
     rows = sorted(results, key=lambda r: (order.get(r["verdict"], 1), -r["size_kb"]))
     reclaim_kb = sum(r["size_kb"] for r in rows if r["verdict"] == "ARCHIVE-CANDIDATE")
     reclaim_str = human_size(reclaim_kb)
     check_count = sum(1 for r in rows if r.get("needs_live_check"))
 
     def card(r: dict, idx: int) -> str:
-        cls = {"ARCHIVE-CANDIDATE": "archive", "DORMANT": "dormant", "ACTIVE": "active"}[r["verdict"]]
+        cls = {"ARCHIVE-CANDIDATE": "archive", "DORMANT": "dormant", "ACTIVE": "active", "ERROR": "error"}[r["verdict"]]
         graph_line = ""
         if r["graph"]:
             g = r["graph"]
@@ -252,6 +274,7 @@ def write_report(results: list[dict], out_path: Path) -> None:
   .card.archive {{ border-left-color:var(--archive); }}
   .card.dormant {{ border-left-color:var(--dormant); }}
   .card.active {{ border-left-color:var(--active); }}
+  .card.error {{ border-left-color:#555; opacity:.6 !important; }}
   @keyframes in {{ to {{ opacity:1; transform:none; }} }}
   .card header {{ display:flex; justify-content:space-between; align-items:center; gap:8px; }}
   .card h3 {{ margin:0; font-size:15px; }}
