@@ -15,6 +15,19 @@ For each top-level folder:
 
 Output is `report.html`: a single static page, sorted by reclaimable size.
 
+## Durability, via Temporal
+
+The first plain-Python run (`declutter.py`) got killed mid-way through 29 folders by an OS memory-pressure reaper (Gemma 4 is an 8GB-resident model, the machine ran low on RAM in the background), at folder 28 of 29, and recovering meant hand-parsing stderr logs back into results.
+
+`temporal_audit.py` runs the exact same per-folder audit as a Temporal workflow instead, with each folder's result as a durable activity:
+
+```bash
+python3 temporal_audit.py worker              # one terminal
+python3 temporal_audit.py start                # another terminal, all folders
+```
+
+Proven live, not just claimed: started a 5-folder run, let 2 complete, `kill -9`'d the worker process mid-activity, confirmed via `temporal workflow describe` that the workflow was still alive on the server with its 2 completed results intact, restarted the worker, and watched it resume from folder 3 rather than starting over. `ta_workflow.py` holds only the deterministic workflow definition (Temporal's sandbox forbids filesystem/subprocess access there); `ta_activities.py` holds the actual I/O, imported only by the worker process.
+
 Nothing is deleted or moved by default. `--apply` only *moves* archive candidates into a sibling `_Archive/` folder, and asks for a yes/no per folder before touching anything.
 
 ## Known limitation: quiet isn't the same as abandoned
@@ -38,8 +51,8 @@ python3 declutter.py                 # defaults to ~/Desktop/Project, writes rep
 python3 declutter.py --apply         # also offers to move ARCHIVE-CANDIDATE folders, asks per item
 ```
 
-Requires `ollama` running locally with a Gemma model pulled, and the [`graphify`](https://github.com/Graphify-Labs/graphify) CLI on PATH.
+Requires `ollama` running locally with a Gemma model pulled, and the [`graphify`](https://github.com/Graphify-Labs/graphify) CLI on PATH. For the Temporal variant, also `pip install -r requirements.txt` in a venv and a local Temporal server (`temporal server start-dev`).
 
-## Prize category
+## Prize categories
 
-Best Use of Gemma. Graphify is not an official Week 3 partner category, it's just the real open-source tool making the verdicts trustworthy instead of invented.
+Best Use of Gemma, Best Use of Temporal. Graphify is not an official Week 3 partner category, it's just the real open-source tool making the verdicts trustworthy instead of invented.
