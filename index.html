@@ -13,7 +13,6 @@
     color-scheme: dark;
     --bg: #0b0d10;
     --panel: #14171c;
-    --panel-2: #181c22;
     --line: #23272e;
     --fg: #e8eaed;
     --dim: #8a919c;
@@ -21,6 +20,10 @@
     --archive: #e5484d;
     --dormant: #f5b726;
     --active: #3fb950;
+    --moss: #8fae6e;
+    --moss-dark: #4a6b3d;
+    --tan: #d8bd98;
+    --fur: #8a6f52;
     --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
     --sans: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
   }
@@ -35,7 +38,6 @@
   .wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
   a { color: var(--fg); }
 
-  /* top bar */
   header.bar {
     display: flex; align-items: center; justify-content: space-between;
     padding: 22px 20px; max-width: 760px; margin: 0 auto;
@@ -49,27 +51,63 @@
   .bar a.gh:hover { color: var(--fg); border-color: var(--dimmer); }
 
   /* hero */
-  .hero { padding: 48px 0 8px; }
+  .hero {
+    padding: 28px 0 8px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 28px;
+    align-items: start;
+  }
+  .hero-copy { min-width: 0; }
   h1 {
     font-family: "Fraunces", serif;
     font-optical-sizing: auto;
     font-weight: 600;
-    font-size: clamp(2.1rem, 5.6vw, 3.4rem);
+    font-size: clamp(2rem, 5.2vw, 3.1rem);
     line-height: 1.08;
     letter-spacing: -0.015em;
-    margin: 0 0 20px;
-    max-width: 14ch;
+    margin: 0 0 18px;
+    max-width: 13ch;
   }
   .sub {
-    font-size: 17px; line-height: 1.65; color: var(--dim); max-width: 46ch; margin: 0 0 28px;
+    font-size: 17px; line-height: 1.65; color: var(--dim); max-width: 46ch; margin: 0 0 26px;
   }
-  .stats { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 40px; }
+  .stats { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
   .stat {
     font-family: var(--mono); font-size: 13px; color: var(--fg);
     border: 1px solid var(--line); background: var(--panel);
     padding: 8px 14px; border-radius: 8px;
   }
   .stat em { font-style: normal; color: var(--dim); margin-left: 6px; }
+
+  /* mascot */
+  .mascot-perch {
+    position: relative; display: flex; flex-direction: column; align-items: center;
+    width: fit-content; padding-top: 8px;
+  }
+  .mascot-glow {
+    position: absolute; inset: -40px -60px auto -60px; height: 280px;
+    background: radial-gradient(closest-side, rgba(143,174,110,0.22), rgba(143,174,110,0.07) 55%, transparent 75%);
+    pointer-events: none; z-index: 0;
+  }
+  #mascot {
+    position: relative; display: block; flex-shrink: 0; z-index: 1;
+    width: 220px; height: 220px; padding: 0; border: 0;
+    background: transparent; appearance: none; cursor: pointer; user-select: none;
+  }
+  #mascot .squash { position: relative; display: block; width: 100%; height: 100%; transform-origin: 50% 78%; }
+  #mascot .layer {
+    position: absolute; inset: 0; background-size: 300% 300%; background-repeat: no-repeat;
+    filter: drop-shadow(0 14px 26px rgba(0,0,0,0.5));
+  }
+  #mascot .reactions { opacity: 0; }
+  #mascot:focus-visible { outline: 2px solid var(--moss); outline-offset: 10px; border-radius: 50%; }
+  .mascot-hint {
+    position: relative; z-index: 1;
+    font-family: var(--mono); font-size: 12px; color: var(--dimmer); text-align: center;
+    margin-top: 2px; opacity: 0; transition: opacity 200ms ease;
+  }
+  #mascot:hover ~ .mascot-hint, #mascot:focus-visible ~ .mascot-hint { opacity: 1; }
 
   .shot {
     border: 1px solid var(--line); border-radius: 14px; overflow: hidden;
@@ -84,7 +122,6 @@
     .shot { animation: none; opacity: 1; transform: none; }
   }
 
-  /* sections */
   section { padding: 72px 0; border-top: 1px solid var(--line); }
   section h2 {
     font-family: "Fraunces", serif; font-weight: 600; font-size: 28px;
@@ -92,7 +129,6 @@
   }
   section .lede { color: var(--dim); max-width: 52ch; margin: 0 0 32px; font-size: 15px; }
 
-  /* pipeline */
   .pipeline { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
   .step {
     display: grid; grid-template-columns: 36px 120px 1fr; gap: 16px; align-items: baseline;
@@ -103,7 +139,6 @@
   .step .k { font-family: var(--mono); font-size: 13px; color: var(--fg); }
   .step .v { font-size: 14px; color: var(--dim); }
 
-  /* incident log */
   .log { border: 1px solid var(--line); border-radius: 12px; background: var(--panel); overflow: hidden; }
   .entry { padding: 18px 20px; border-bottom: 1px solid var(--line); }
   .entry:last-child { border-bottom: none; }
@@ -119,7 +154,6 @@
   .entry .fix { color: var(--dim); font-size: 14px; }
   .entry .fix b { color: var(--fg); font-weight: 600; }
 
-  /* terminal */
   .term {
     font-family: var(--mono); font-size: 13px; line-height: 1.7; color: #c2c7cf;
     background: #0d0f12; border: 1px solid var(--line); border-radius: 12px;
@@ -129,7 +163,20 @@
   .term .warn { color: var(--dormant); }
   .term .dim { color: var(--dimmer); }
 
-  /* tech row */
+  /* garden */
+  .garden-box {
+    border: 1px solid var(--line); border-radius: 14px; background: var(--panel);
+    padding: 20px; cursor: text;
+  }
+  .garden-box svg { display: block; width: 100%; height: 160px; }
+  .garden-label {
+    font-family: var(--mono); font-size: 12px; color: var(--dimmer);
+    display: flex; justify-content: space-between; margin-top: 10px;
+  }
+  .garden-caret { display: inline-block; width: 7px; height: 13px; background: var(--moss); margin-left: 2px; vertical-align: -2px; animation: blink 1s step-end infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
   .tech { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0 32px; }
   .tech span {
     font-family: var(--mono); font-size: 12px; color: var(--dim);
@@ -145,6 +192,9 @@
   @media (max-width: 560px) {
     .step { grid-template-columns: 24px 1fr; }
     .step .v { grid-column: 1 / -1; }
+    .hero { grid-template-columns: 1fr; }
+    #mascot { width: 120px; height: 120px; }
+    .mascot-glow { inset: -20px -30px auto -30px; height: 170px; }
   }
 </style>
 </head>
@@ -157,16 +207,29 @@
 
 <div class="wrap">
   <div class="hero">
-    <h1>Your Desktop/Project folder stopped being yours to understand.</h1>
-    <p class="sub">GraphSloth scans a folder of old projects, pulls real disk size, real git history, a real code graph, and real deploy signals, then asks a local Gemma model for a two-line verdict it has to justify with those facts. It never deletes anything.</p>
-    <div class="stats">
-      <span class="stat">29<em>folders audited</em></span>
-      <span class="stat">29.4G<em>reclaimable, verified</em></span>
-      <span class="stat">3<em>real bugs caught by dogfooding</em></span>
+    <div class="hero-copy">
+      <h1>Your Desktop/Project folder stopped being yours to understand.</h1>
+      <p class="sub">GraphSloth scans a folder of old projects, pulls real disk size, real git history, a real code graph, and real deploy signals, then asks a local Gemma model for a two-line verdict it has to justify with those facts. It never deletes anything.</p>
+      <div class="stats">
+        <span class="stat">29<em>folders audited</em></span>
+        <span class="stat">29.4G<em>reclaimable, verified</em></span>
+        <span class="stat">3<em>real bugs caught by dogfooding</em></span>
+      </div>
     </div>
-    <div class="shot">
-      <img src="report_screenshot.png" alt="GraphSloth's audit report, showing real project folders sorted into archive-candidate, dormant, and active, each with a one-sentence reason citing real facts." loading="lazy">
+    <div class="mascot-perch">
+      <div class="mascot-glow" aria-hidden="true"></div>
+      <button type="button" id="mascot" aria-label="Boop the sloth">
+        <span class="squash">
+          <span class="layer directions" style="background-image:url(mascots/sloth-directions.webp)"></span>
+          <span class="layer reactions" style="background-image:url(mascots/sloth-reactions.webp)"></span>
+        </span>
+      </button>
+      <div class="mascot-hint" aria-hidden="true">boop</div>
     </div>
+  </div>
+
+  <div class="shot">
+    <img src="report_screenshot.png" alt="GraphSloth's audit report, showing real project folders sorted into archive-candidate, dormant, and active, each with a one-sentence reason citing real facts." loading="lazy">
   </div>
 
   <section id="how">
@@ -198,9 +261,22 @@
       <div class="entry dormant">
         <span class="flag">raw exception (almost shipped)</span>
         <p>A single Ollama timeout, right after a restart, nearly shipped as a verdict reading <code>[Gemma call failed after 3 attempts: timed out]</code>.</p>
-        <p class="fix"><b>Cause:</b> no visibility when a model call fails. Every result is now checked for that shape of error and retried before anything gets published.</p>
+        <p class="fix"><b>Cause:</b> the model thinks before it answers, and a tangled prompt pushed that past a 300s timeout on CPU-only inference. Fixed with <code>think: false</code> and a token cap — plus a check that catches and retries that shape of error before anything publishes.</p>
       </div>
     </div>
+  </section>
+
+  <section id="garden">
+    <h2>Good things take their time</h2>
+    <p class="lede">A sloth doesn't rush, and neither does this. Click in and type — space cuts the stem, backspace withers it.</p>
+    <div class="garden-box" id="gardenBox" tabindex="0" role="application" aria-label="Type to grow a vine">
+      <svg id="gardenSvg" viewBox="0 0 700 160" preserveAspectRatio="none" aria-hidden="true"></svg>
+      <div class="garden-label">
+        <span>type something slow<span class="garden-caret" aria-hidden="true"></span></span>
+        <span id="gardenCount">0 characters grown</span>
+      </div>
+    </div>
+    <input type="text" id="gardenInput" class="sr-only" autocomplete="off" aria-hidden="true" tabindex="-1">
   </section>
 
   <section id="durability">
@@ -232,6 +308,172 @@ $ temporal_audit.py worker        <span class="dim">(restarted)</span>
     </div>
   </footer>
 </div>
+
+<script>
+(function mascot() {
+  var el = document.getElementById('mascot');
+  if (!el) return;
+  var dirLayer = el.querySelector('.directions');
+  var reactLayer = el.querySelector('.reactions');
+  var squash = el.querySelector('.squash');
+
+  var DIRECTIONS = ['up-left','up','up-right','left','center','right','down-left','down','down-right'];
+  var REACTIONS = ['blink','heart','sparkle','surprised','wink','bashful','sleepy','dizzy','delighted'];
+  var CLOCKWISE = ['right','down-right','down','down-left','left','up-left','up','up-right'];
+  var SECTOR = (Math.PI * 2) / CLOCKWISE.length;
+  var HYSTERESIS = 0.12;
+  var DEAD_ZONE = 70;
+  var PAYOFFS = ['heart','sparkle','delighted'];
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function cellPos(i) { return ((i % 3) * 50) + '% ' + (Math.floor(i / 3) * 50) + '%'; }
+  function wrap(a) { return Math.atan2(Math.sin(a), Math.cos(a)); }
+  function setDirection(d) { dirLayer.style.backgroundPosition = cellPos(DIRECTIONS.indexOf(d)); }
+  function setReaction(r) {
+    if (r) {
+      reactLayer.style.backgroundPosition = cellPos(REACTIONS.indexOf(r));
+      reactLayer.style.opacity = '1';
+      dirLayer.style.opacity = '0';
+    } else {
+      reactLayer.style.opacity = '0';
+      dirLayer.style.opacity = '1';
+    }
+  }
+  setDirection('center');
+
+  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    var sector = -1, pointer = null;
+    function aim() {
+      if (!pointer) return;
+      var box = el.getBoundingClientRect();
+      var dx = pointer.x - (box.left + box.width / 2);
+      var dy = pointer.y - (box.top + box.height / 2);
+      if (Math.hypot(dx, dy) < DEAD_ZONE) { sector = -1; setDirection('center'); return; }
+      var angle = Math.atan2(dy, dx);
+      if (sector !== -1 && Math.abs(wrap(angle - sector * SECTOR)) < SECTOR / 2 + HYSTERESIS) return;
+      sector = (Math.round(angle / SECTOR) + CLOCKWISE.length) % CLOCKWISE.length;
+      setDirection(CLOCKWISE[sector]);
+    }
+    window.addEventListener('pointermove', function (e) { pointer = { x: e.clientX, y: e.clientY }; aim(); }, { passive: true });
+    window.addEventListener('scroll', aim, { passive: true });
+  }
+
+  var boops = { count: 0, at: 0 };
+  var timers = [];
+  el.addEventListener('click', function () {
+    timers.forEach(clearTimeout); timers = [];
+    var now = Date.now();
+    boops.count = now - boops.at < 1600 ? boops.count + 1 : 1;
+    boops.at = now;
+    if (boops.count >= 4) {
+      boops.count = 0;
+      setReaction('dizzy');
+      timers.push(setTimeout(function () { setReaction(null); }, 1100));
+    } else {
+      setReaction('blink');
+      timers.push(setTimeout(function () { setReaction(PAYOFFS[(boops.count - 1) % PAYOFFS.length]); }, 120));
+      timers.push(setTimeout(function () { setReaction(null); }, 560));
+    }
+    if (!reduced && squash.animate) {
+      squash.animate([
+        { transform: 'scale(1,1)', easing: 'ease-in' },
+        { transform: 'scale(1.10,0.86)', offset: 0.18, easing: 'ease-out' },
+        { transform: 'scale(0.95,1.08)', offset: 0.45, easing: 'ease-in-out' },
+        { transform: 'scale(1.03,0.97)', offset: 0.72, easing: 'ease-in-out' },
+        { transform: 'scale(1,1)' }
+      ], { duration: 420, easing: 'linear' });
+    }
+  });
+})();
+</script>
+
+<script>
+(function garden() {
+  var box = document.getElementById('gardenBox');
+  var svg = document.getElementById('gardenSvg');
+  var input = document.getElementById('gardenInput');
+  var count = document.getElementById('gardenCount');
+  if (!box || !svg || !input) return;
+  var NS = 'http://www.w3.org/2000/svg';
+  var W = 700, H = 160, GROUND = H - 6;
+
+  var baseX = 40;
+  var vines = [[{ x: baseX, y: GROUND }]]; // array of vines, each an array of {x,y}
+
+  function startVine() {
+    baseX += 48;
+    if (baseX > W - 30) baseX = 40;
+    vines.push([{ x: baseX, y: GROUND }]);
+  }
+
+  function render() {
+    svg.innerHTML = '';
+    var total = 0;
+    vines.forEach(function (pts) {
+      if (pts.length < 2) return;
+      var d = 'M ' + pts[0].x + ' ' + pts[0].y;
+      for (var i = 1; i < pts.length; i++) d += ' L ' + pts[i].x + ' ' + pts[i].y;
+      var path = document.createElementNS(NS, 'path');
+      path.setAttribute('d', d);
+      path.setAttribute('fill', 'none');
+      path.setAttribute('stroke', 'var(--moss-dark)');
+      path.setAttribute('stroke-width', '2.5');
+      path.setAttribute('stroke-linecap', 'round');
+      svg.appendChild(path);
+      pts.forEach(function (p, i) {
+        if (i === 0) return; // seed point, not a typed character
+        total++;
+        if (i % 4 === 3) {
+          var leaf = document.createElementNS(NS, 'ellipse');
+          var side = i % 8 === 3 ? 1 : -1;
+          leaf.setAttribute('cx', p.x + side * 9);
+          leaf.setAttribute('cy', p.y - 2);
+          leaf.setAttribute('rx', '8');
+          leaf.setAttribute('ry', '4.5');
+          leaf.setAttribute('transform', 'rotate(' + (side * 30) + ' ' + (p.x + side * 9) + ' ' + (p.y - 2) + ')');
+          leaf.setAttribute('fill', 'var(--moss)');
+          svg.appendChild(leaf);
+        }
+      });
+    });
+    count.textContent = total + (total === 1 ? ' character grown' : ' characters grown');
+  }
+
+  function grow() {
+    var pts = vines[vines.length - 1];
+    var last = pts[pts.length - 1];
+    var x = last.x + (Math.random() * 6 - 3);
+    var y = Math.max(16, last.y - (6 + Math.random() * 3));
+    pts.push({ x: x, y: y });
+    render();
+  }
+
+  function wither() {
+    var pts = vines[vines.length - 1];
+    if (pts.length > 1) {
+      pts.pop();
+    } else if (vines.length > 1) {
+      vines.pop();
+    }
+    render();
+  }
+
+  box.addEventListener('click', function () { input.focus(); });
+  input.addEventListener('keydown', function (e) {
+    if (e.key === 'Backspace') { wither(); return; }
+  });
+  input.addEventListener('input', function (e) {
+    var val = input.value;
+    input.value = '';
+    for (var i = 0; i < val.length; i++) {
+      var ch = val[i];
+      if (ch === ' ') startVine(); else grow();
+    }
+  });
+
+  render();
+})();
+</script>
 
 </body>
 </html>
