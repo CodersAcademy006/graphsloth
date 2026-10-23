@@ -5,3 +5,5 @@ POST.md
 .venv/
 worker.log
 worker2.log
+ollama.log
+*.bak
