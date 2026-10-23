@@ -1,0 +1,126 @@
+[1/29] Cluely ...
+    -> ARCHIVE-CANDIDATE: The folder is not a git repository, contains no deploy signals, and has a disk size of 51M.
+[2/29] EMPOWER-2026-Poster ...
+    -> ARCHIVE-CANDIDATE: The folder is only 2M and contains no git repository or deploy signals.
+[3/29] JobCoachX ...
+    -> ARCHIVE-CANDIDATE: The folder has a disk size of 0M, is not a git repository, and contains no deploy signals.
+[4/29] OSS ...
+    -> ARCHIVE-CANDIDATE: The 26.8G folder is not a git repository and contains no deploy signals.
+[5/29] Personal Site ...
+    -> ARCHIVE-CANDIDATE: The folder is not a git repository and contains no deploy signals found.
+[6/29] ScoreOne ...
+    -> ACTIVE: The folder is actively maintained with a last git commit from 1 day ago and uncommitted changes, while also containing .vercel and vercel.json deploy signals.
+[7/29] Srijan Saree ...
+    -> ARCHIVE-CANDIDATE: The folder occupies 1.6G, is not a git repository, and contains no deploy signals.
+[8/29] Trading ...
+    -> ARCHIVE-CANDIDATE: This 13.1G folder is not a git repository and contains no deploy signals.
+[9/29] Web-Dev ...
+    -> ACTIVE: The folder contains uncommitted changes and a live deploy signal at https://typing-speed-testbysudeep.netlify.app/, indicating an active service.
+[10/29] anchor-of-life-transcripts ...
+Python(31855) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+    (ollama call failed, attempt 1/3: timed out)
+    (ollama call failed, attempt 2/3: HTTP Error 500: Internal Server Error)
+    -> ARCHIVE-CANDIDATE: The folder contains 27.0G of data, is not a git repository, and lacks any deploy signals.
+[11/29] architecture-diagrams ...
+Python(40291) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+    -> ARCHIVE-CANDIDATE: The folder has a disk size of 0M, is not a git repository, and contains no deploy signals.
+[12/29] astro-notes ...
+Python(40294) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40295) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40296) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40297) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40298) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40312) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+    -> ACTIVE: The project is active as evidenced by a last git commit 6 days ago and a structure of 272 code nodes.
+[13/29] astrology-rag ...
+Python(40327) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40328) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40329) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40330) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40331) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40345) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+    -> DORMANT: The project contains 867 code nodes and 1686 edges with a last git commit on the 'feat/access-token-auth' branch occurring 35 days ago.
+[14/29] chess-lab ...
+Python(40365) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+    -> ARCHIVE-CANDIDATE: The folder is not a git repository and has no deploy signals found.
+[15/29] fieldcast ...
+Python(40373) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40374) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40375) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40376) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40377) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40380) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+    -> ACTIVE: The project is currently being maintained with a git commit from 11 days ago and a structural graph of 68 code nodes and 151 edges.
+[16/29] formula-ocr ...
+Python(40392) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40393) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40394) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40395) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40396) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40411) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+    -> ACTIVE: The project shows recent activity with a commit 9 days ago and existing uncommitted changes.
+[17/29] kaggle ...
+Python(40416) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+    -> ARCHIVE-CANDIDATE: The 1.2G folder is not a git repository and contains no deploy signals.
+[18/29] karmaCompass ...
+Python(40427) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40428) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40429) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40430) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40431) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40445) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+    -> ACTIVE: The folder shows active development with a commit from 16 days ago on the 'fix/feedback-durability-proofs' branch and existing uncommitted changes.
+[19/29] lab_data ...
+Python(40450) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+    -> ARCHIVE-CANDIDATE: The folder is not a git repository and lacks any deploy signals for its 332M disk size.
+[20/29] lab_data_nse ...
+Python(40458) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+    -> ARCHIVE-CANDIDATE: The 193M folder is not a git repository and contains no deploy signals.
+[21/29] leads ...
+Python(40464) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+    -> ARCHIVE-CANDIDATE: The 1.5G folder is not a git repository and has no deploy signals found.
+[22/29] leads-scoreone ...
+Python(40478) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+    -> ARCHIVE-CANDIDATE: The folder is 74M, is not a git repository, and has no deploy signals found.
+[23/29] nse-strategy-lab ...
+Python(40481) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40482) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40483) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40484) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40485) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40499) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+    -> ACTIVE: The folder shows recent activity with a git commit from 15 days ago and a structural graph of 347 code nodes.
+[24/29] ocr-paper-artifacts ...
+Python(40509) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+    -> ARCHIVE-CANDIDATE: This 290M folder is not a git repository and contains no deploy signals found.
+[25/29] papers-from-scratch ...
+Python(40529) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40530) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40531) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40532) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40533) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40547) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+    -> ACTIVE: The project shows recent activity with a last git commit 4 days ago and a live URL at https://papers-from-scratch.vercel.app.
+[26/29] raktsetu ...
+Python(40553) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40554) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40555) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40556) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40557) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40571) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+    -> ACTIVE: The folder shows recent activity with a git commit from 5 days ago and a structure of 245 code nodes and 553 edges.
+[27/29] sih-26130 ...
+Python(40587) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40588) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40589) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40590) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40591) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40605) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+    -> ACTIVE: The folder contains uncommitted changes and a docker-compose.yml file despite a last git commit 54 days ago.
+[28/29] tpu-as-gpu ...
+Python(40626) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40627) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40628) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40629) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40630) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(40644) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
