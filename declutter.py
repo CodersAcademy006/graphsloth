@@ -227,13 +227,22 @@ def gemma_verdict(name: str, size_str: str, git: dict | None, graph: dict | None
         "REASON: one sentence citing the actual numbers above.\n\n"
         f"Folder: {name}\n{facts_block}\n"
     )
-    body = json.dumps({"model": MODEL, "prompt": prompt, "stream": False}).encode()
+    # This model emits a chain-of-thought before its answer. On a plain "say
+    # hi" that's a couple seconds; on a more tangled fact block (a multi-repo
+    # container, say) it ran long enough to blow past a 300s timeout on CPU-
+    # only inference. We only need two short lines back, so cap it: skip the
+    # thinking trace where Ollama honors `think`, and hard-limit tokens
+    # either way so a verbose response can't run away.
+    body = json.dumps({
+        "model": MODEL, "prompt": prompt, "stream": False, "think": False,
+        "options": {"num_predict": 120},
+    }).encode()
     text = ""
     last_err = None
     for attempt in range(3):
         try:
             req = urllib.request.Request(OLLAMA_URL, data=body, headers={"Content-Type": "application/json"})
-            with urllib.request.urlopen(req, timeout=300) as resp:
+            with urllib.request.urlopen(req, timeout=120) as resp:
                 text = json.loads(resp.read()).get("response", "")
             break
         except Exception as e:  # noqa: BLE001 - genuinely want to retry any transient failure here
