@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GraphSloth — an audit for the folder you've stopped understanding</title>
+<meta name="description" content="GraphSloth scans a folder of old projects, pulls real disk/git/code-graph/deploy facts, and asks a local Gemma model for a keep/dormant/archive verdict it has to justify. Built for International Sloth Day.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500..700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #0b0d10;
+    --panel: #14171c;
+    --panel-2: #181c22;
+    --line: #23272e;
+    --fg: #e8eaed;
+    --dim: #8a919c;
+    --dimmer: #5b6270;
+    --archive: #e5484d;
+    --dormant: #f5b726;
+    --active: #3fb950;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font: 16px/1.6 var(--sans);
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+  a { color: var(--fg); }
+
+  /* top bar */
+  header.bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px 20px; max-width: 760px; margin: 0 auto;
+  }
+  .wordmark { font-family: var(--mono); font-size: 14px; color: var(--dim); letter-spacing: 0.01em; }
+  .wordmark b { color: var(--fg); font-weight: 600; }
+  .bar a.gh {
+    font-size: 13px; color: var(--dim); text-decoration: none; border: 1px solid var(--line);
+    padding: 7px 14px; border-radius: 99px; transition: color 120ms ease, border-color 120ms ease;
+  }
+  .bar a.gh:hover { color: var(--fg); border-color: var(--dimmer); }
+
+  /* hero */
+  .hero { padding: 48px 0 8px; }
+  h1 {
+    font-family: "Fraunces", serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-size: clamp(2.1rem, 5.6vw, 3.4rem);
+    line-height: 1.08;
+    letter-spacing: -0.015em;
+    margin: 0 0 20px;
+    max-width: 14ch;
+  }
+  .sub {
+    font-size: 17px; line-height: 1.65; color: var(--dim); max-width: 46ch; margin: 0 0 28px;
+  }
+  .stats { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 40px; }
+  .stat {
+    font-family: var(--mono); font-size: 13px; color: var(--fg);
+    border: 1px solid var(--line); background: var(--panel);
+    padding: 8px 14px; border-radius: 8px;
+  }
+  .stat em { font-style: normal; color: var(--dim); margin-left: 6px; }
+
+  .shot {
+    border: 1px solid var(--line); border-radius: 14px; overflow: hidden;
+    background: var(--panel); box-shadow: 0 30px 80px -30px rgba(0,0,0,0.6);
+    opacity: 0; transform: translateY(10px);
+    animation: rise 500ms cubic-bezier(.22,1,.36,1) forwards;
+    animation-delay: 80ms;
+  }
+  .shot img { display: block; width: 100%; height: auto; }
+  @keyframes rise { to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .shot { animation: none; opacity: 1; transform: none; }
+  }
+
+  /* sections */
+  section { padding: 72px 0; border-top: 1px solid var(--line); }
+  section h2 {
+    font-family: "Fraunces", serif; font-weight: 600; font-size: 28px;
+    letter-spacing: -0.01em; margin: 0 0 8px;
+  }
+  section .lede { color: var(--dim); max-width: 52ch; margin: 0 0 32px; font-size: 15px; }
+
+  /* pipeline */
+  .pipeline { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .step {
+    display: grid; grid-template-columns: 36px 120px 1fr; gap: 16px; align-items: baseline;
+    padding: 16px 18px; border-bottom: 1px solid var(--line); background: var(--panel);
+  }
+  .step:last-child { border-bottom: none; }
+  .step .n { font-family: var(--mono); color: var(--dimmer); font-size: 13px; }
+  .step .k { font-family: var(--mono); font-size: 13px; color: var(--fg); }
+  .step .v { font-size: 14px; color: var(--dim); }
+
+  /* incident log */
+  .log { border: 1px solid var(--line); border-radius: 12px; background: var(--panel); overflow: hidden; }
+  .entry { padding: 18px 20px; border-bottom: 1px solid var(--line); }
+  .entry:last-child { border-bottom: none; }
+  .entry .flag {
+    font-family: var(--mono); font-size: 12px; padding: 2px 8px; border-radius: 5px; display: inline-block;
+    margin-bottom: 10px;
+  }
+  .entry.archive .flag { background: rgba(229,72,77,0.12); color: var(--archive); }
+  .entry.dormant .flag { background: rgba(245,183,38,0.12); color: var(--dormant); }
+  .entry.active .flag { background: rgba(63,185,80,0.12); color: var(--active); }
+  .entry p { margin: 0 0 8px; font-size: 15px; line-height: 1.6; }
+  .entry p:last-child { margin-bottom: 0; }
+  .entry .fix { color: var(--dim); font-size: 14px; }
+  .entry .fix b { color: var(--fg); font-weight: 600; }
+
+  /* terminal */
+  .term {
+    font-family: var(--mono); font-size: 13px; line-height: 1.7; color: #c2c7cf;
+    background: #0d0f12; border: 1px solid var(--line); border-radius: 12px;
+    padding: 20px 22px; overflow-x: auto; white-space: pre;
+  }
+  .term .ok { color: var(--active); }
+  .term .warn { color: var(--dormant); }
+  .term .dim { color: var(--dimmer); }
+
+  /* tech row */
+  .tech { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0 32px; }
+  .tech span {
+    font-family: var(--mono); font-size: 12px; color: var(--dim);
+    border: 1px solid var(--line); padding: 5px 11px; border-radius: 99px;
+  }
+
+  footer { padding: 48px 0 80px; }
+  footer p { color: var(--dimmer); font-size: 13px; max-width: 52ch; }
+  footer .links { display: flex; gap: 18px; margin-top: 18px; }
+  footer .links a { font-size: 14px; text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
+  footer .links a:hover { text-decoration-color: var(--fg); }
+
+  @media (max-width: 560px) {
+    .step { grid-template-columns: 24px 1fr; }
+    .step .v { grid-column: 1 / -1; }
+  }
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <span class="wordmark"><b>graphsloth</b></span>
+  <a class="gh" href="https://github.com/CodersAcademy006/graphsloth">View on GitHub</a>
+</header>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>Your Desktop/Project folder stopped being yours to understand.</h1>
+    <p class="sub">GraphSloth scans a folder of old projects, pulls real disk size, real git history, a real code graph, and real deploy signals, then asks a local Gemma model for a two-line verdict it has to justify with those facts. It never deletes anything.</p>
+    <div class="stats">
+      <span class="stat">29<em>folders audited</em></span>
+      <span class="stat">29.4G<em>reclaimable, verified</em></span>
+      <span class="stat">3<em>real bugs caught by dogfooding</em></span>
+    </div>
+    <div class="shot">
+      <img src="report_screenshot.png" alt="GraphSloth's audit report, showing real project folders sorted into archive-candidate, dormant, and active, each with a one-sentence reason citing real facts." loading="lazy">
+    </div>
+  </div>
+
+  <section id="how">
+    <h2>How it actually decides</h2>
+    <p class="lede">Five steps, in order. Each one only adds facts; the model at the end can't skip to a conclusion without them.</p>
+    <div class="pipeline">
+      <div class="step"><span class="n">1</span><span class="k">size</span><span class="v">disk usage via <code>du -sk</code>, no opinion yet</span></div>
+      <div class="step"><span class="n">2</span><span class="k">git</span><span class="v">last commit age, branch, dirty state — checked one level into subfolders too, for folders that hold a repo rather than being one</span></div>
+      <div class="step"><span class="n">3</span><span class="k">graphify</span><span class="v">a real tree-sitter structural graph: node/edge counts, most-referenced symbol, zero LLM cost</span></div>
+      <div class="step"><span class="n">4</span><span class="k">deploy</span><span class="v"><code>vercel.json</code>, <code>docker-compose.yml</code>, a live URL in the README — cheap, local, no-network signals that something might still be running</span></div>
+      <div class="step"><span class="n">5</span><span class="k">gemma</span><span class="v">reads only the facts above and returns ACTIVE, DORMANT, or ARCHIVE-CANDIDATE with a one-sentence reason — a deterministic code check overrides it if it ignores a deploy signal</span></div>
+    </div>
+  </section>
+
+  <section id="bugs">
+    <h2>Caught lying to itself</h2>
+    <p class="lede">All three of these were found by running GraphSloth on the author's own live, production folders — not in a test suite.</p>
+    <div class="log">
+      <div class="entry archive">
+        <span class="flag">ARCHIVE-CANDIDATE (wrong)</span>
+        <p>Srijan Saree, a live store with real orders, came back as safe to archive.</p>
+        <p class="fix"><b>Cause:</b> the deploy-signal check only looked at the folder's top level. The store's actual code, and its <code>.vercel</code> config, sat one folder down. A shallow scan saw nothing and called it quiet.</p>
+      </div>
+      <div class="entry active">
+        <span class="flag">ACTIVE (wrong)</span>
+        <p>OSS, 26.8G holding 34 separate git clones, was one busy clone away from being called ACTIVE as a whole.</p>
+        <p class="fix"><b>Cause:</b> the first nested-repo fix picked whichever single clone was touched most recently and judged the entire folder by it. Only 10 of the 34 clones had moved in the last 30 days. The fix now reports the real distribution and caps the verdict instead of trusting one busy repo.</p>
+      </div>
+      <div class="entry dormant">
+        <span class="flag">raw exception (almost shipped)</span>
+        <p>A single Ollama timeout, right after a restart, nearly shipped as a verdict reading <code>[Gemma call failed after 3 attempts: timed out]</code>.</p>
+        <p class="fix"><b>Cause:</b> no visibility when a model call fails. Every result is now checked for that shape of error and retried before anything gets published.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="durability">
+    <h2>Dies without losing its place</h2>
+    <p class="lede">The first plain-Python run got killed mid-way through 29 folders by an OS memory-pressure reaper. Gemma sits at 8G resident; the machine ran low on RAM in the background. Recovering meant hand-parsing a log file.</p>
+    <p class="lede">So the audit loop now runs as a <a href="https://temporal.io">Temporal</a> workflow, one durable activity per folder. Proven live, not claimed:</p>
+    <div class="term">$ temporal_audit.py start
+<span class="dim">[1/5] fieldcast ... done
+[2/5] karmacompass ... done
+[3/5] ocr-pipeline ... running</span>
+$ kill -9 &lt;worker pid&gt;          <span class="warn">worker dies mid-activity</span>
+$ temporal workflow describe ...
+<span class="ok">2 activities completed, state intact on the server</span>
+$ temporal_audit.py worker        <span class="dim">(restarted)</span>
+<span class="ok">resumes at folder 3 — never redoes 1 or 2</span></div>
+  </section>
+
+  <footer>
+    <div class="tech">
+      <span>Gemma 4 (Ollama)</span>
+      <span>Graphify</span>
+      <span>Temporal</span>
+      <span>Python</span>
+    </div>
+    <p>Built for the DEV Challenge, Week 3 — "Slow and Steady," International Sloth Day. Entered for Best Use of Gemma and Best Use of Temporal. Nothing here costs money or leaves the machine it runs on.</p>
+    <div class="links">
+      <a href="https://github.com/CodersAcademy006/graphsloth">Source on GitHub</a>
+      <a href="https://github.com/CodersAcademy006/graphsloth#readme">Read the README</a>
+    </div>
+  </footer>
+</div>
+
+</body>
+</html>
