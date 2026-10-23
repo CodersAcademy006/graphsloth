@@ -161,17 +161,46 @@ def resolve_signals(path: Path) -> tuple[dict | None, dict | None, list[str]]:
     if not nested:
         return None, None, deploy
 
-    # Pick whichever nested repo was touched most recently and represent the
-    # parent folder by it (fine for a single "code/" subfolder case).
-    child, cg = min(nested, key=lambda t: t[1]["last_commit_days_ago"])
-    git = {**cg, "nested_in": child.name}
-    graph = graphify_facts(child, cache_key=f"{path.name}__{child.name}")
-    return git, graph, deploy
+    if len(nested) == 1:
+        # A single nested repo almost certainly IS the real project (e.g. a
+        # "code/" subfolder); representing the parent by it is fair.
+        child, cg = nested[0]
+        git = {**cg, "nested_in": child.name}
+        graph = graphify_facts(child, cache_key=f"{path.name}__{child.name}")
+        return git, graph, deploy
+
+    # Multiple independent repos one level down (a folder of clones, not one
+    # project). Picking just the busiest one to represent the whole folder is
+    # a biased estimator: one repo touched today doesn't mean the other N-1
+    # aren't dead. Report the real distribution instead of a single point.
+    ages = sorted(cg["last_commit_days_ago"] for _, cg in nested)
+    most_recent_child, most_recent_cg = min(nested, key=lambda t: t[1]["last_commit_days_ago"])
+    recent_within_30d = sum(1 for a in ages if a <= 30)
+    git = {
+        "multi_repo_container": True,
+        "nested_repo_count": len(nested),
+        "most_recent_repo": most_recent_child.name,
+        "last_commit_days_ago": ages[0],
+        "oldest_days_ago": ages[-1],
+        "recent_within_30d": recent_within_30d,
+        "branch": most_recent_cg["branch"],
+        "dirty": any(cg["dirty"] for _, cg in nested),
+    }
+    # No single-repo structural graph can represent a multi-repo container
+    # without misleading about the whole folder's shape.
+    return git, None, deploy
 
 
 def gemma_verdict(name: str, size_str: str, git: dict | None, graph: dict | None, deploy: list[str]) -> dict:
     facts = [f"- disk size: {size_str}"]
-    if git:
+    if git and git.get("multi_repo_container"):
+        facts.append(
+            f"- this is NOT one project: it's a container of {git['nested_repo_count']} separate git repos one "
+            f"level down. Most recent activity: {git['last_commit_days_ago']} days ago (repo '{git['most_recent_repo']}'). "
+            f"Oldest: {git['oldest_days_ago']} days ago. Only {git['recent_within_30d']} of {git['nested_repo_count']} "
+            f"repos were touched in the last 30 days."
+        )
+    elif git:
         state = "has uncommitted changes" if git["dirty"] else "clean working tree"
         where = f" (from nested subfolder '{git['nested_in']}', the top level itself isn't a git repo)" if git.get("nested_in") else ""
         facts.append(f"- last git commit: {git['last_commit_days_ago']} days ago, branch '{git['branch']}', {state}{where}")
@@ -191,6 +220,8 @@ def gemma_verdict(name: str, size_str: str, git: dict | None, graph: dict | None
         "You are given REAL facts about ONE folder below. Cite only these numbers, never invent any. "
         "A folder with deploy signals might be a stable live service that's rarely touched, not abandoned code; "
         "weigh that honestly instead of treating old commits alone as a reason to archive. "
+        "If the folder is a container of many separate git repos, never call the whole thing ACTIVE just because "
+        "one of many repos was touched recently; judge it by how many of the repos are actually recent. "
         "Reply with exactly two lines:\n"
         "VERDICT: one of ACTIVE, DORMANT, ARCHIVE-CANDIDATE\n"
         "REASON: one sentence citing the actual numbers above.\n\n"
@@ -227,6 +258,14 @@ def gemma_verdict(name: str, size_str: str, git: dict | None, graph: dict | None
     if needs_live_check and verdict == "ARCHIVE-CANDIDATE":
         verdict = "DORMANT"
         reason += " [downgraded from ARCHIVE-CANDIDATE: deploy signals present, verify it isn't live before touching it]"
+
+    # Same philosophy, different bias: a multi-repo container with ANY recent
+    # activity never comes back as a clean ACTIVE just because one of many
+    # repos was busy. Code-level cap, not hoping the model remembers.
+    if git and git.get("multi_repo_container") and git["recent_within_30d"] > 0 and verdict == "ACTIVE":
+        verdict = "DORMANT"
+        reason += (f" [capped from ACTIVE: only {git['recent_within_30d']} of {git['nested_repo_count']} nested "
+                    f"repos were touched in the last 30 days, the rest are stale, needs per-repo review]")
     return {"verdict": verdict, "reason": reason, "needs_live_check": needs_live_check}
 
 
@@ -279,7 +318,12 @@ def write_report(results: list[dict], out_path: Path) -> None:
             extra = f" &middot; top symbol <code>{g['top_node']}</code>" if g.get("top_node") else ""
             graph_line = f'<div class="graph">Graphify: {g["nodes"]} nodes / {g["edges"]} edges{extra}</div>'
         git_line = ""
-        if r["git"]:
+        if r["git"] and r["git"].get("multi_repo_container"):
+            g = r["git"]
+            git_line = (f'<div class="git">{g["nested_repo_count"]} nested repos, not one project &middot; '
+                        f'{g["recent_within_30d"]}/{g["nested_repo_count"]} touched in last 30d &middot; '
+                        f'most recent {g["last_commit_days_ago"]}d ago ({g["most_recent_repo"]})</div>')
+        elif r["git"]:
             nested = f" (nested in {r['git']['nested_in']}/)" if r["git"].get("nested_in") else ""
             git_line = f'<div class="git">last commit {r["git"]["last_commit_days_ago"]}d ago on {r["git"]["branch"]}{nested}</div>'
         check_line = ""
