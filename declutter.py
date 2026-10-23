@@ -96,8 +96,8 @@ def deploy_signals(path: Path) -> list[str]:
     return signals
 
 
-def graphify_facts(path: Path) -> dict | None:
-    out_dir = CACHE_DIR / path.name
+def graphify_facts(path: Path, cache_key: str | None = None) -> dict | None:
+    out_dir = CACHE_DIR / (cache_key or path.name)
     out_dir.mkdir(parents=True, exist_ok=True)
     try:
         subprocess.run(
@@ -126,13 +126,57 @@ def graphify_facts(path: Path) -> dict | None:
     return {"nodes": len(nodes), "edges": len(edges), "top_node": top_node}
 
 
+def resolve_signals(path: Path) -> tuple[dict | None, dict | None, list[str]]:
+    """Git facts, Graphify facts, and deploy signals for a folder, checking one
+    level of subdirectories when the top level itself isn't a git repo.
+
+    Real bug this exists to fix: several project folders here (Srijan Saree,
+    OSS, Trading, kaggle, Personal Site, JobCoachX) are a parent directory
+    holding a git repo as a subfolder, not a repo themselves. A top-level-only
+    scan sees "not a git repository, no deploy signals" and has zero
+    visibility into what's actually inside, including live services."""
+    git = git_facts(path)
+    deploy = deploy_signals(path)
+    if git is not None:
+        graph = graphify_facts(path)
+        return git, graph, deploy
+
+    try:
+        children = [c for c in path.iterdir() if c.is_dir() and not c.name.startswith(".")]
+    except OSError:
+        children = []
+
+    nested = []  # [(child, git_facts), ...] for every subfolder that's a real git repo
+    for child in children:
+        cg = git_facts(child)
+        if cg is not None:
+            nested.append((child, cg))
+
+    nested_deploy = []
+    for child in children:
+        for sig in deploy_signals(child):
+            nested_deploy.append(f"{child.name}/{sig}")
+    deploy = deploy + nested_deploy
+
+    if not nested:
+        return None, None, deploy
+
+    # Pick whichever nested repo was touched most recently and represent the
+    # parent folder by it (fine for a single "code/" subfolder case).
+    child, cg = min(nested, key=lambda t: t[1]["last_commit_days_ago"])
+    git = {**cg, "nested_in": child.name}
+    graph = graphify_facts(child, cache_key=f"{path.name}__{child.name}")
+    return git, graph, deploy
+
+
 def gemma_verdict(name: str, size_str: str, git: dict | None, graph: dict | None, deploy: list[str]) -> dict:
     facts = [f"- disk size: {size_str}"]
     if git:
         state = "has uncommitted changes" if git["dirty"] else "clean working tree"
-        facts.append(f"- last git commit: {git['last_commit_days_ago']} days ago, branch '{git['branch']}', {state}")
+        where = f" (from nested subfolder '{git['nested_in']}', the top level itself isn't a git repo)" if git.get("nested_in") else ""
+        facts.append(f"- last git commit: {git['last_commit_days_ago']} days ago, branch '{git['branch']}', {state}{where}")
     else:
-        facts.append("- not a git repository")
+        facts.append("- not a git repository, and no git repo found one level into its subfolders either")
     if graph:
         extra = f", most-referenced symbol: {graph['top_node']}" if graph.get("top_node") else ""
         facts.append(f"- Graphify structural graph: {graph['nodes']} code nodes, {graph['edges']} edges{extra}")
@@ -197,9 +241,7 @@ def audit(root: Path) -> list[dict]:
         try:
             kb = dir_size_kb(path)
             size_str = human_size(kb)
-            git = git_facts(path)
-            graph = graphify_facts(path) if git else None
-            deploy = deploy_signals(path)
+            git, graph, deploy = resolve_signals(path)
             verdict = gemma_verdict(path.name, size_str, git, graph, deploy)
             results.append({
                 "name": path.name,
@@ -238,7 +280,8 @@ def write_report(results: list[dict], out_path: Path) -> None:
             graph_line = f'<div class="graph">Graphify: {g["nodes"]} nodes / {g["edges"]} edges{extra}</div>'
         git_line = ""
         if r["git"]:
-            git_line = f'<div class="git">last commit {r["git"]["last_commit_days_ago"]}d ago on {r["git"]["branch"]}</div>'
+            nested = f" (nested in {r['git']['nested_in']}/)" if r["git"].get("nested_in") else ""
+            git_line = f'<div class="git">last commit {r["git"]["last_commit_days_ago"]}d ago on {r["git"]["branch"]}{nested}</div>'
         check_line = ""
         if r.get("needs_live_check"):
             sig = ", ".join(r.get("deploy_signals", []))
