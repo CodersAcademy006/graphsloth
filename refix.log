@@ -1,0 +1,14 @@
+re-auditing: Srijan Saree
+  -> ACTIVE: The folder contains a live Vercel deployment and was updated as recently as 8 days ago.
+re-auditing: OSS
+  -> DORMANT: Only 10 of the 34 repositories were touched in the last 30 days, though the ThinkRL repo shows recent activity and deploy signals.
+re-auditing: Trading
+  -> ACTIVE: The folder contains a live deployed service via .vercel signals and shows recent activity with a commit from 20 days ago.
+re-auditing: kaggle
+  -> DORMANT: The folder has uncommitted changes and a last git commit 139 days ago with no deploy signals.
+re-auditing: Personal Site
+  -> ACTIVE: The folder contains a live deployment signal for a site with a recent commit from 21 days ago.
+re-auditing: JobCoachX
+  -> ACTIVE: The folder contains a commit from 21 days ago and a structural graph with 7 code nodes.
+
+Done. 29 total folders, 6 re-audited with the nested-scan fix.

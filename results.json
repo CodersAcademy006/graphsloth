@@ -1,0 +1,528 @@
+[
+  {
+    "name": "Cluely",
+    "path": "/Users/srijanupadhyay/Desktop/Project/Cluely",
+    "size_str": "51M",
+    "size_kb": 52084,
+    "git": null,
+    "graph": null,
+    "deploy_signals": [],
+    "verdict": "ARCHIVE-CANDIDATE",
+    "reason": "The folder is not a git repository, contains no deploy signals, and has a disk size of 51M.",
+    "needs_live_check": false
+  },
+  {
+    "name": "EMPOWER-2026-Poster",
+    "path": "/Users/srijanupadhyay/Desktop/Project/EMPOWER-2026-Poster",
+    "size_str": "2M",
+    "size_kb": 1956,
+    "git": null,
+    "graph": null,
+    "deploy_signals": [],
+    "verdict": "ARCHIVE-CANDIDATE",
+    "reason": "The folder is only 2M and contains no git repository or deploy signals.",
+    "needs_live_check": false
+  },
+  {
+    "name": "JobCoachX",
+    "path": "/Users/srijanupadhyay/Desktop/Project/JobCoachX",
+    "size_str": "0M",
+    "size_kb": 296,
+    "git": {
+      "branch": "redesign/minimal-apple",
+      "last_commit_days_ago": 21,
+      "dirty": false,
+      "nested_in": "code"
+    },
+    "graph": {
+      "nodes": 7,
+      "edges": 6,
+      "top_node": "@vercel/edge"
+    },
+    "deploy_signals": [],
+    "verdict": "ACTIVE",
+    "reason": "The folder contains a commit from 21 days ago and a structural graph with 7 code nodes.",
+    "needs_live_check": false
+  },
+  {
+    "name": "OSS",
+    "path": "/Users/srijanupadhyay/Desktop/Project/OSS",
+    "size_str": "26.8G",
+    "size_kb": 28076084,
+    "git": {
+      "multi_repo_container": true,
+      "nested_repo_count": 34,
+      "most_recent_repo": "ThinkRL",
+      "last_commit_days_ago": 2,
+      "oldest_days_ago": 126,
+      "recent_within_30d": 10,
+      "branch": "feat/papo-dedicated-trainer-cli",
+      "dirty": true
+    },
+    "graph": null,
+    "deploy_signals": [
+      "ThinkRL/docker-compose.yml"
+    ],
+    "verdict": "DORMANT",
+    "reason": "Only 10 of the 34 repositories were touched in the last 30 days, though the ThinkRL repo shows recent activity and deploy signals.",
+    "needs_live_check": true
+  },
+  {
+    "name": "Personal Site",
+    "path": "/Users/srijanupadhyay/Desktop/Project/Personal Site",
+    "size_str": "5M",
+    "size_kb": 4820,
+    "git": {
+      "branch": "main",
+      "last_commit_days_ago": 21,
+      "dirty": false,
+      "nested_in": "code"
+    },
+    "graph": {
+      "nodes": 0,
+      "edges": 0,
+      "top_node": null
+    },
+    "deploy_signals": [
+      "code/.vercel"
+    ],
+    "verdict": "ACTIVE",
+    "reason": "The folder contains a live deployment signal for a site with a recent commit from 21 days ago.",
+    "needs_live_check": true
+  },
+  {
+    "name": "ScoreOne",
+    "path": "/Users/srijanupadhyay/Desktop/Project/ScoreOne",
+    "size_str": "3.5G",
+    "size_kb": 3662088,
+    "git": {
+      "branch": "feat/615-student-delete-resend-verification",
+      "last_commit_days_ago": 1,
+      "dirty": true
+    },
+    "graph": {
+      "nodes": 5692,
+      "edges": 13191,
+      "top_node": "cn()"
+    },
+    "deploy_signals": [
+      ".vercel",
+      "vercel.json"
+    ],
+    "verdict": "ACTIVE",
+    "reason": "The folder is actively maintained with a last git commit from 1 day ago and uncommitted changes, while also containing .vercel and vercel.json deploy signals.",
+    "needs_live_check": true
+  },
+  {
+    "name": "Srijan Saree",
+    "path": "/Users/srijanupadhyay/Desktop/Project/Srijan Saree",
+    "size_str": "1.6G",
+    "size_kb": 1637484,
+    "git": {
+      "branch": "main",
+      "last_commit_days_ago": 8,
+      "dirty": false,
+      "nested_in": "code"
+    },
+    "graph": {
+      "nodes": 476,
+      "edges": 1154,
+      "top_node": "next"
+    },
+    "deploy_signals": [
+      "code/.vercel"
+    ],
+    "verdict": "ACTIVE",
+    "reason": "The folder contains a live Vercel deployment and was updated as recently as 8 days ago.",
+    "needs_live_check": true
+  },
+  {
+    "name": "Trading",
+    "path": "/Users/srijanupadhyay/Desktop/Project/Trading",
+    "size_str": "13.1G",
+    "size_kb": 13713052,
+    "git": {
+      "branch": "main",
+      "last_commit_days_ago": 20,
+      "dirty": true,
+      "nested_in": "nse-collector"
+    },
+    "graph": {
+      "nodes": 38,
+      "edges": 74,
+      "top_node": "log()"
+    },
+    "deploy_signals": [
+      "web/.vercel"
+    ],
+    "verdict": "ACTIVE",
+    "reason": "The folder contains a live deployed service via .vercel signals and shows recent activity with a commit from 20 days ago.",
+    "needs_live_check": true
+  },
+  {
+    "name": "Web-Dev",
+    "path": "/Users/srijanupadhyay/Desktop/Project/Web-Dev",
+    "size_str": "1.4G",
+    "size_kb": 1468596,
+    "git": {
+      "branch": "fix/batch-2-more",
+      "last_commit_days_ago": 26,
+      "dirty": true
+    },
+    "graph": {
+      "nodes": 10935,
+      "edges": 22324,
+      "top_node": "n"
+    },
+    "deploy_signals": [
+      "live URL in README: https://typing-speed-testbysudeep.netlify.app/"
+    ],
+    "verdict": "ACTIVE",
+    "reason": "The folder contains uncommitted changes and a live deploy signal at https://typing-speed-testbysudeep.netlify.app/, indicating an active service.",
+    "needs_live_check": true
+  },
+  {
+    "name": "anchor-of-life-transcripts",
+    "path": "/Users/srijanupadhyay/Desktop/Project/anchor-of-life-transcripts",
+    "size_str": "27.0G",
+    "size_kb": 28269116,
+    "git": null,
+    "graph": null,
+    "deploy_signals": [],
+    "verdict": "ARCHIVE-CANDIDATE",
+    "reason": "The folder contains 27.0G of data, is not a git repository, and lacks any deploy signals.",
+    "needs_live_check": false
+  },
+  {
+    "name": "architecture-diagrams",
+    "path": "/Users/srijanupadhyay/Desktop/Project/architecture-diagrams",
+    "size_str": "0M",
+    "size_kb": 244,
+    "git": null,
+    "graph": null,
+    "deploy_signals": [],
+    "verdict": "ARCHIVE-CANDIDATE",
+    "reason": "The folder has a disk size of 0M, is not a git repository, and contains no deploy signals.",
+    "needs_live_check": false
+  },
+  {
+    "name": "astro-notes",
+    "path": "/Users/srijanupadhyay/Desktop/Project/astro-notes",
+    "size_str": "121M",
+    "size_kb": 123568,
+    "git": {
+      "branch": "main",
+      "last_commit_days_ago": 6,
+      "dirty": false
+    },
+    "graph": {
+      "nodes": 272,
+      "edges": 1039,
+      "top_node": "box()"
+    },
+    "deploy_signals": [],
+    "verdict": "ACTIVE",
+    "reason": "The project is active as evidenced by a last git commit 6 days ago and a structure of 272 code nodes.",
+    "needs_live_check": false
+  },
+  {
+    "name": "astrology-rag",
+    "path": "/Users/srijanupadhyay/Desktop/Project/astrology-rag",
+    "size_str": "396M",
+    "size_kb": 405232,
+    "git": {
+      "branch": "feat/access-token-auth",
+      "last_commit_days_ago": 35,
+      "dirty": false
+    },
+    "graph": {
+      "nodes": 867,
+      "edges": 1686,
+      "top_node": "PipelineTests"
+    },
+    "deploy_signals": [],
+    "verdict": "DORMANT",
+    "reason": "The project contains 867 code nodes and 1686 edges with a last git commit on the 'feat/access-token-auth' branch occurring 35 days ago.",
+    "needs_live_check": false
+  },
+  {
+    "name": "chess-lab",
+    "path": "/Users/srijanupadhyay/Desktop/Project/chess-lab",
+    "size_str": "33M",
+    "size_kb": 33684,
+    "git": null,
+    "graph": null,
+    "deploy_signals": [],
+    "verdict": "ARCHIVE-CANDIDATE",
+    "reason": "The folder is not a git repository and has no deploy signals found.",
+    "needs_live_check": false
+  },
+  {
+    "name": "fieldcast",
+    "path": "/Users/srijanupadhyay/Desktop/Project/fieldcast",
+    "size_str": "1.5G",
+    "size_kb": 1559852,
+    "git": {
+      "branch": "main",
+      "last_commit_days_ago": 11,
+      "dirty": false
+    },
+    "graph": {
+      "nodes": 68,
+      "edges": 151,
+      "top_node": "forecast()"
+    },
+    "deploy_signals": [],
+    "verdict": "ACTIVE",
+    "reason": "The project is currently being maintained with a git commit from 11 days ago and a structural graph of 68 code nodes and 151 edges.",
+    "needs_live_check": false
+  },
+  {
+    "name": "formula-ocr",
+    "path": "/Users/srijanupadhyay/Desktop/Project/formula-ocr",
+    "size_str": "13.0G",
+    "size_kb": 13657448,
+    "git": {
+      "branch": "architecture-blitz",
+      "last_commit_days_ago": 10,
+      "dirty": true
+    },
+    "graph": {
+      "nodes": 1695,
+      "edges": 3745,
+      "top_node": "split_text()"
+    },
+    "deploy_signals": [],
+    "verdict": "ACTIVE",
+    "reason": "The project shows recent activity with a commit 9 days ago and existing uncommitted changes.",
+    "needs_live_check": false
+  },
+  {
+    "name": "kaggle",
+    "path": "/Users/srijanupadhyay/Desktop/Project/kaggle",
+    "size_str": "1.2G",
+    "size_kb": 1263348,
+    "git": {
+      "branch": "main",
+      "last_commit_days_ago": 139,
+      "dirty": true,
+      "nested_in": "stellar"
+    },
+    "graph": {
+      "nodes": 345,
+      "edges": 765,
+      "top_node": "build_features()"
+    },
+    "deploy_signals": [],
+    "verdict": "DORMANT",
+    "reason": "The folder has uncommitted changes and a last git commit 139 days ago with no deploy signals.",
+    "needs_live_check": false
+  },
+  {
+    "name": "karmaCompass",
+    "path": "/Users/srijanupadhyay/Desktop/Project/karmaCompass",
+    "size_str": "34M",
+    "size_kb": 35228,
+    "git": {
+      "branch": "fix/feedback-durability-proofs",
+      "last_commit_days_ago": 16,
+      "dirty": true
+    },
+    "graph": {
+      "nodes": 183,
+      "edges": 367,
+      "top_node": "build()"
+    },
+    "deploy_signals": [],
+    "verdict": "ACTIVE",
+    "reason": "The folder shows active development with a commit from 16 days ago on the 'fix/feedback-durability-proofs' branch and existing uncommitted changes.",
+    "needs_live_check": false
+  },
+  {
+    "name": "lab_data",
+    "path": "/Users/srijanupadhyay/Desktop/Project/lab_data",
+    "size_str": "332M",
+    "size_kb": 340180,
+    "git": null,
+    "graph": null,
+    "deploy_signals": [],
+    "verdict": "ARCHIVE-CANDIDATE",
+    "reason": "The folder is not a git repository and lacks any deploy signals for its 332M disk size.",
+    "needs_live_check": false
+  },
+  {
+    "name": "lab_data_nse",
+    "path": "/Users/srijanupadhyay/Desktop/Project/lab_data_nse",
+    "size_str": "193M",
+    "size_kb": 198052,
+    "git": null,
+    "graph": null,
+    "deploy_signals": [],
+    "verdict": "ARCHIVE-CANDIDATE",
+    "reason": "The 193M folder is not a git repository and contains no deploy signals.",
+    "needs_live_check": false
+  },
+  {
+    "name": "leads",
+    "path": "/Users/srijanupadhyay/Desktop/Project/leads",
+    "size_str": "1.5G",
+    "size_kb": 1543228,
+    "git": null,
+    "graph": null,
+    "deploy_signals": [],
+    "verdict": "ARCHIVE-CANDIDATE",
+    "reason": "The 1.5G folder is not a git repository and has no deploy signals found.",
+    "needs_live_check": false
+  },
+  {
+    "name": "leads-scoreone",
+    "path": "/Users/srijanupadhyay/Desktop/Project/leads-scoreone",
+    "size_str": "74M",
+    "size_kb": 75916,
+    "git": null,
+    "graph": null,
+    "deploy_signals": [],
+    "verdict": "ARCHIVE-CANDIDATE",
+    "reason": "The folder is 74M, is not a git repository, and has no deploy signals found.",
+    "needs_live_check": false
+  },
+  {
+    "name": "nse-strategy-lab",
+    "path": "/Users/srijanupadhyay/Desktop/Project/nse-strategy-lab",
+    "size_str": "202M",
+    "size_kb": 207172,
+    "git": {
+      "branch": "main",
+      "last_commit_days_ago": 15,
+      "dirty": false
+    },
+    "graph": {
+      "nodes": 347,
+      "edges": 1371,
+      "top_node": "fam()"
+    },
+    "deploy_signals": [],
+    "verdict": "ACTIVE",
+    "reason": "The folder shows recent activity with a git commit from 15 days ago and a structural graph of 347 code nodes.",
+    "needs_live_check": false
+  },
+  {
+    "name": "ocr-paper-artifacts",
+    "path": "/Users/srijanupadhyay/Desktop/Project/ocr-paper-artifacts",
+    "size_str": "290M",
+    "size_kb": 297176,
+    "git": null,
+    "graph": null,
+    "deploy_signals": [],
+    "verdict": "ARCHIVE-CANDIDATE",
+    "reason": "This 290M folder is not a git repository and contains no deploy signals found.",
+    "needs_live_check": false
+  },
+  {
+    "name": "papers-from-scratch",
+    "path": "/Users/srijanupadhyay/Desktop/Project/papers-from-scratch",
+    "size_str": "1.2G",
+    "size_kb": 1254900,
+    "git": {
+      "branch": "main",
+      "last_commit_days_ago": 4,
+      "dirty": false
+    },
+    "graph": {
+      "nodes": 676,
+      "edges": 1305,
+      "top_node": "LayerNorm1d"
+    },
+    "deploy_signals": [
+      "live URL in README: https://papers-from-scratch.vercel.app"
+    ],
+    "verdict": "ACTIVE",
+    "reason": "The project shows recent activity with a last git commit 4 days ago and a live URL at https://papers-from-scratch.vercel.app.",
+    "needs_live_check": true
+  },
+  {
+    "name": "raktsetu",
+    "path": "/Users/srijanupadhyay/Desktop/Project/raktsetu",
+    "size_str": "312M",
+    "size_kb": 319248,
+    "git": {
+      "branch": "main",
+      "last_commit_days_ago": 6,
+      "dirty": false
+    },
+    "graph": {
+      "nodes": 245,
+      "edges": 553,
+      "top_node": "getDb()"
+    },
+    "deploy_signals": [],
+    "verdict": "ACTIVE",
+    "reason": "The folder shows recent activity with a git commit from 5 days ago and a structure of 245 code nodes and 553 edges.",
+    "needs_live_check": false
+  },
+  {
+    "name": "sih-26130",
+    "path": "/Users/srijanupadhyay/Desktop/Project/sih-26130",
+    "size_str": "724M",
+    "size_kb": 741140,
+    "git": {
+      "branch": "main",
+      "last_commit_days_ago": 54,
+      "dirty": true
+    },
+    "graph": {
+      "nodes": 602,
+      "edges": 1652,
+      "top_node": "User"
+    },
+    "deploy_signals": [
+      "docker-compose.yml"
+    ],
+    "verdict": "ACTIVE",
+    "reason": "The folder contains uncommitted changes and a docker-compose.yml file despite a last git commit 54 days ago.",
+    "needs_live_check": true
+  },
+  {
+    "name": "tpu-as-gpu",
+    "path": "/Users/srijanupadhyay/Desktop/Project/tpu-as-gpu",
+    "size_str": "479M",
+    "size_kb": 490808,
+    "git": {
+      "branch": "main",
+      "last_commit_days_ago": 14,
+      "dirty": false
+    },
+    "graph": {
+      "nodes": 156,
+      "edges": 263,
+      "top_node": "tpu_as_gpu_on_real_tpu()"
+    },
+    "deploy_signals": [],
+    "verdict": "ACTIVE",
+    "reason": "The project shows recent activity with a git commit from 14 days ago and a complex structural graph of 156 code nodes and 263 edges.",
+    "needs_live_check": false
+  },
+  {
+    "name": "transcript-ai",
+    "path": "/Users/srijanupadhyay/Desktop/Project/transcript-ai",
+    "size_str": "1.1G",
+    "size_kb": 1176196,
+    "git": {
+      "branch": "main",
+      "last_commit_days_ago": 38,
+      "dirty": false
+    },
+    "graph": {
+      "nodes": 320,
+      "edges": 548,
+      "top_node": "process_transcription_task()"
+    },
+    "deploy_signals": [
+      "railway.toml",
+      "docker-compose.yml"
+    ],
+    "verdict": "ACTIVE",
+    "reason": "The presence of railway.toml and docker-compose.yml indicates a live service, despite the last git commit being 38 days ago.",
+    "needs_live_check": true
+  }
+]
